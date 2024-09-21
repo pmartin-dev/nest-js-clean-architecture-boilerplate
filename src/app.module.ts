@@ -1,13 +1,33 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
-import { TodosModule } from './todos/todos.module';
-import { Authenticator } from './users/services/authenticator';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { MongooseModule } from '@nestjs/mongoose';
+
 import { AuthGuard } from './core/guards/auth.guard';
+import { TodosModule } from './todos/todos.module';
 import { I_USER_REPOSITORY } from './users/ports/user-repository.interface';
+import { Authenticator } from './users/services/authenticator';
+import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [UsersModule, TodosModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    MongooseModule.forRootAsync({
+      imports: [
+        ConfigModule.forRoot({
+          isGlobal: true,
+        }),
+      ],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('DATABASE_URL'), // Temps d'attente pour la sélection du serveur
+      }),
+    }),
+    UsersModule,
+    TodosModule,
+  ],
   controllers: [],
   providers: [
     {

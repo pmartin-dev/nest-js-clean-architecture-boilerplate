@@ -4,20 +4,24 @@ import { ITodoRepository } from '../ports/todo-repository.interface';
 export class InMemoryTodoRepository implements ITodoRepository {
   constructor(public readonly database: Todo[] = []) {}
 
-  findById(id: string): Todo | null {
+  async findById(id: string): Promise<Todo | null> {
     return this.database.find((todo) => todo.props.id === id);
   }
 
-  create(todo: Todo): void {
+  async findAll(): Promise<Todo[]> {
+    return this.database;
+  }
+
+  async create(todo: Todo): Promise<void> {
     this.database.push(todo);
   }
 
-  update(todo: Todo): void {
+  async update(todo: Todo): Promise<void> {
     const index = this.database.findIndex((t) => t.props.id === todo.props.id);
     this.database[index] = todo;
   }
 
-  delete(todo: Todo): void {
+  async delete(todo: Todo): Promise<void> {
     const index = this.database.findIndex((t) => t.props.id === todo.props.id);
     this.database.splice(index, 1);
   }

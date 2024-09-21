@@ -21,11 +21,8 @@ export class CreateTodo {
       throw new TodoTitleTooLongException();
     }
 
-    try {
-      this.repository.create(todo);
-    } catch (e) {
-      console.log(e);
-    }
+    this.repository.create(todo);
+
     return { id, title };
   }
 }

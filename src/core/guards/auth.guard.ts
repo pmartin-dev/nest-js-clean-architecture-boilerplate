@@ -1,4 +1,5 @@
 import { CanActivate } from '@nestjs/common';
+
 import { IAuthenticator } from '../../users/services/authenticator';
 export class AuthGuard implements CanActivate {
   constructor(private readonly authenticator: IAuthenticator) {}

@@ -1,14 +1,25 @@
 import { Module } from '@nestjs/common';
+import { getModelToken, MongooseModule } from '@nestjs/mongoose';
+
+import { MongoUser } from './adapters/mongo/mongo-user';
+import { MongoUserRepository } from './adapters/mongo/mongo-user.repository';
 import { I_USER_REPOSITORY } from './ports/user-repository.interface';
-import { InMemoryUserRepository } from './adapters/in-memory-user-repository';
 
 @Module({
-  imports: [],
+  imports: [
+    MongooseModule.forFeature([
+      {
+        name: MongoUser.CollectionName,
+        schema: MongoUser.Schema,
+      },
+    ]),
+  ],
   providers: [
     {
       provide: I_USER_REPOSITORY,
-      useFactory: () => {
-        return new InMemoryUserRepository();
+      inject: [getModelToken(MongoUser.CollectionName)],
+      useFactory: (model) => {
+        return new MongoUserRepository(model);
       },
     },
   ],

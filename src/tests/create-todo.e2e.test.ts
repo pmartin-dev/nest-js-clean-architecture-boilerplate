@@ -1,6 +1,7 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { Test, type TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
+
 import { AppModule } from '../app.module';
 
 describe('Feature: create a todo', () => {
@@ -13,6 +14,10 @@ describe('Feature: create a todo', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
+  });
+
+  afterEach(async () => {
+    await app.close();
   });
 
   describe('Scenario: happy path', () => {

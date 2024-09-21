@@ -1,10 +1,11 @@
 import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import { z } from 'zod';
+
 import { ZodValidationPipe } from '../../core/pipes/zod-validation.pipe';
+import { I_GET_TODO_BY_ID_QUERY } from '../ports/get-todo-by-id-query.interface';
+import { GetTodoByIdQuery } from '../queries/get-todo-by-id';
 import { CreateTodo } from '../use-cases/create-todo';
 import { TodoView } from '../views/todo.view';
-import { GetTodoByIdQuery } from '../queries/get-todo-by-id';
-import { I_GET_TODO_BY_ID_QUERY } from '../ports/get-todo-by-id-query.interface';
-import { z } from 'zod';
 
 const createTodoSchema = z.object({
   title: z.string(),
