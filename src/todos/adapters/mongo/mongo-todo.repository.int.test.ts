@@ -6,16 +6,21 @@ import { Model } from 'mongoose';
 import { AppModule } from '../../../app.module';
 import { Todo } from '../../../todos/entities/todo.entity';
 import { MongoTodo } from './mongo-todo';
-// import { MongoTodoRepository } from './mongo-todo.repository';
+import { MongoTodoRepository } from './mongo-todo.repository';
 
 describe('MongoWebiaireRepository', () => {
   let app: INestApplication;
   let model: Model<MongoTodo.SchemaClass>;
-  // let repository: MongoTodoRepository;
+  let repository: MongoTodoRepository;
 
   const fakeTodo = new Todo({
     id: 'id-1',
     title: 'title-1',
+  });
+
+  const fakeTodo2 = new Todo({
+    id: 'id-2',
+    title: 'title-2',
   });
 
   async function createTodoInDatabase(todo: Todo) {
@@ -38,6 +43,8 @@ describe('MongoWebiaireRepository', () => {
       getModelToken(MongoTodo.CollectionName),
     );
 
+    repository = new MongoTodoRepository(model);
+
     await app
       .get<
         Model<MongoTodo.SchemaClass>
@@ -53,79 +60,38 @@ describe('MongoWebiaireRepository', () => {
 
   describe('find webinaire by id', () => {
     it('should find the corresponding todo', async () => {
-      // const todo = await repository.findById(fakeTodo.props.id);
-      // const todos = await repository.findAll();
-      // console.log({ todos });
-      // expect(todo).toEqual(fakeTodo);
-      expect(1).toBe(1);
+      const todo = await repository.findById(fakeTodo.props.id);
+      expect(todo).toEqual(fakeTodo);
     });
 
-    // it('should return null if the todo does not exist', async () => {
-    //   const repository = new MongoWebiaireRepository();
-    //   const webinaire = await repository.findById('id-2');
-    //   expect(webinaire).toBeNull();
-    // });
+    it('should return null if the todo does not exist', async () => {
+      const webinaire = await repository.findById('id-2');
+      expect(webinaire).toBeNull();
+    });
   });
 
-  //   describe('create todo', () => {
-  //     it('should create the todo', async () => {
-  //       // Arrange
-  //       const repository = new MongoWebiaireRepository();
+  describe('create todo', () => {
+    it('should create the todo', async () => {
+      await repository.create(fakeTodo2);
+      const todoInDatabase = await repository.findById(fakeTodo2.props.id);
+      expect(todoInDatabase).toEqual(fakeTodo2);
+    });
+  });
 
-  //       // Act
-  //       const webinaire = new Webinaire({
-  //         id: 'id-2',
-  //         title: 'title-2',
-  //         organizerId: 'organizer-id-2',
-  //         seats: 2,
-  //         startDate: new Date(),
-  //         endDate: new Date(),
-  //       });
-  //       await repository.create(webinaire);
-  //       const webinaireInDatabase = await repository.findById(webinaire.props.id);
-  //       expect(webinaireInDatabase).toEqual(webinaire);
-  //     });
-  //   });
+  describe('update todo', () => {
+    it('should update the todo', async () => {
+      const newTodo = new Todo({ id: fakeTodo.props.id, title: 'title-2' });
+      await repository.update(newTodo);
+      const todoInDatabase = await repository.findById(fakeTodo.props.id);
+      expect(todoInDatabase).toEqual(newTodo);
+    });
+  });
 
-  //   describe('update todo', () => {
-  //     it('should update the todo', async () => {
-  //       // Arrange
-  //       const repository = new MongoWebiaireRepository();
-
-  //       // Act
-  //       const webinaire = new Webinaire({
-  //         id: 'id-1',
-  //         title: 'title-1',
-  //         organizerId: 'organizer-id-1',
-  //         seats: 1,
-  //         startDate: new Date(),
-  //         endDate: new Date(),
-  //       });
-  //       await repository.create(webinaire);
-  //       await repository.update(webinaire);
-  //       const webinaireInDatabase = await repository.findById(webinaire.props.id);
-  //       expect(webinaireInDatabase).toEqual(webinaire);
-  //     });
-  //   });
-
-  //   describe('delete todo', () => {
-  //     it('should delete the todo', async () => {
-  //       // Arrange
-  //       const repository = new MongoWebiaireRepository();
-
-  //       // Act
-  //       const webinaire = new Webinaire({
-  //         id: 'id-1',
-  //         title: 'title-1',
-  //         organizerId: 'organizer-id-1',
-  //         seats: 1,
-  //         startDate: new Date(),
-  //         endDate: new Date(),
-  //       });
-  //       await repository.create(webinaire);
-  //       await repository.delete(webinaire);
-  //       const webinaireInDatabase = await repository.findById(webinaire.props.id);
-  //       expect(webinaireInDatabase).toBeNull();
-  //     });
-  //   });
+  describe('delete todo', () => {
+    it('should delete the todo', async () => {
+      await repository.delete(fakeTodo);
+      const todoInDatabase = await repository.findById(fakeTodo.props.id);
+      expect(todoInDatabase).toBeNull();
+    });
+  });
 });
