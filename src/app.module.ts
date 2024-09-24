@@ -11,9 +11,6 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
     MongooseModule.forRootAsync({
       imports: [
         ConfigModule.forRoot({
@@ -22,7 +19,7 @@ import { UsersModule } from './users/users.module';
       ],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        uri: configService.get<string>('DATABASE_URL'), // Temps d'attente pour la sélection du serveur
+        uri: configService.get<string>('DATABASE_URL'),
       }),
     }),
     UsersModule,

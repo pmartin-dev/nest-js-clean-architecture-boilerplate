@@ -1,15 +1,13 @@
-import { INestApplication } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
-import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
 
-import { AppModule } from '../../../app.module';
+import { TestApp } from '../../../tests/utils/test-app';
 import { User } from '../../../users/entities/user.entity';
 import { MongoUser } from './mongo-user';
 import { MongoUserRepository } from './mongo-user.repository';
 
 describe('MongoUserRepository', () => {
-  let app: INestApplication;
+  let app: TestApp;
   let model: Model<MongoUser.SchemaClass>;
   let repository: MongoUserRepository;
 
@@ -29,22 +27,12 @@ describe('MongoUserRepository', () => {
   }
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
+    app = new TestApp();
+    await app.setup();
 
     model = app.get<Model<MongoUser.SchemaClass>>(
       getModelToken(MongoUser.CollectionName),
     );
-
-    await app
-      .get<
-        Model<MongoUser.SchemaClass>
-      >(getModelToken(MongoUser.CollectionName))
-      .deleteMany({});
 
     repository = new MongoUserRepository(model);
 
@@ -52,7 +40,7 @@ describe('MongoUserRepository', () => {
   });
 
   afterEach(async () => {
-    await app.close();
+    await app.cleanup();
   });
 
   describe('find user by email', () => {

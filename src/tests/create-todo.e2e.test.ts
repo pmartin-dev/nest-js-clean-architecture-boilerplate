@@ -1,23 +1,19 @@
-import { INestApplication } from '@nestjs/common';
-import { Test, type TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 
-import { AppModule } from '../app.module';
+import { e2eUserSeeds } from './seeds/user-seeds.e2e';
+import { TestApp } from './utils/test-app';
 
 describe('Feature: create a todo', () => {
-  let app: INestApplication;
+  let app: TestApp;
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
+    app = new TestApp();
+    await app.setup();
+    await app.loadFixtures([e2eUserSeeds.alex]);
   });
 
   afterEach(async () => {
-    await app.close();
+    await app.cleanup();
   });
 
   describe('Scenario: happy path', () => {

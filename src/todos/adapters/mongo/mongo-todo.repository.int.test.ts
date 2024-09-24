@@ -1,19 +1,17 @@
-import { INestApplication } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
-import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
 
-import { AppModule } from '../../../app.module';
+import { TestApp } from '../../../tests/utils/test-app';
 import { Todo } from '../../../todos/entities/todo.entity';
 import { MongoTodo } from './mongo-todo';
 import { MongoTodoRepository } from './mongo-todo.repository';
 
 describe('MongoWebiaireRepository', () => {
-  let app: INestApplication;
+  let app: TestApp;
   let model: Model<MongoTodo.SchemaClass>;
   let repository: MongoTodoRepository;
 
-  const fakeTodo = new Todo({
+  const fakeTodo1 = new Todo({
     id: 'id-1',
     title: 'title-1',
   });
@@ -32,12 +30,8 @@ describe('MongoWebiaireRepository', () => {
   }
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
+    app = new TestApp();
+    await app.setup();
 
     model = app.get<Model<MongoTodo.SchemaClass>>(
       getModelToken(MongoTodo.CollectionName),
@@ -45,23 +39,17 @@ describe('MongoWebiaireRepository', () => {
 
     repository = new MongoTodoRepository(model);
 
-    await app
-      .get<
-        Model<MongoTodo.SchemaClass>
-      >(getModelToken(MongoTodo.CollectionName))
-      .deleteMany({});
-
-    await createTodoInDatabase(fakeTodo);
+    await createTodoInDatabase(fakeTodo1);
   });
 
   afterEach(async () => {
-    await app.close();
+    await app.cleanup();
   });
 
   describe('find webinaire by id', () => {
     it('should find the corresponding todo', async () => {
-      const todo = await repository.findById(fakeTodo.props.id);
-      expect(todo).toEqual(fakeTodo);
+      const todo = await repository.findById(fakeTodo1.props.id);
+      expect(todo).toEqual(fakeTodo1);
     });
 
     it('should return null if the todo does not exist', async () => {
@@ -80,17 +68,17 @@ describe('MongoWebiaireRepository', () => {
 
   describe('update todo', () => {
     it('should update the todo', async () => {
-      const newTodo = new Todo({ id: fakeTodo.props.id, title: 'title-2' });
+      const newTodo = new Todo({ id: fakeTodo1.props.id, title: 'title-2' });
       await repository.update(newTodo);
-      const todoInDatabase = await repository.findById(fakeTodo.props.id);
+      const todoInDatabase = await repository.findById(fakeTodo1.props.id);
       expect(todoInDatabase).toEqual(newTodo);
     });
   });
 
   describe('delete todo', () => {
     it('should delete the todo', async () => {
-      await repository.delete(fakeTodo);
-      const todoInDatabase = await repository.findById(fakeTodo.props.id);
+      await repository.delete(fakeTodo1);
+      const todoInDatabase = await repository.findById(fakeTodo1.props.id);
       expect(todoInDatabase).toBeNull();
     });
   });
