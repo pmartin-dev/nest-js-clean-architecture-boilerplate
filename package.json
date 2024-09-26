@@ -32,6 +32,7 @@
     "rxjs": "^7.8.1",
     "testcontainers": "^10.13.1",
     "uuid": "^10.0.0",
+    "winston": "^3.14.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {

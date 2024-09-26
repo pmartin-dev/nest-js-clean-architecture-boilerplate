@@ -11,4 +11,16 @@ export class ConfigurationService {
       testUrl: this.configService.get<string>('DATABASE_INT_TEST_URL'),
     };
   }
+
+  server() {
+    return {
+      port: this.configService.get<number>('PORT'),
+    };
+  }
+
+  logger() {
+    return {
+      level: this.configService.get<string>('LOGGER_LEVEL'),
+    };
+  }
 }

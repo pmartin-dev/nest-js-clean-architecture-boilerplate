@@ -7,6 +7,7 @@ export const validateConfiguration = (
     DATABASE_URL: z.string(),
     DATABASE_INT_TEST_URL: z.string(),
     PORT: z.string().regex(/^\d+$/).transform(Number),
+    LOG_LEVEL: z.string(),
   });
 
   const parsedEnv = envSchema.safeParse(config);
