@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { ConfigurationModule } from './core/configuration/configuration.module';
+import { ConfigurationService } from './core/configuration/configuration.service';
 import { AuthGuard } from './core/guards/auth.guard';
 import { TodosModule } from './todos/todos.module';
 import { I_USER_REPOSITORY } from './users/ports/user-repository.interface';
@@ -11,15 +12,12 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
+    ConfigurationModule,
     MongooseModule.forRootAsync({
-      imports: [
-        ConfigModule.forRoot({
-          isGlobal: true,
-        }),
-      ],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        uri: configService.get<string>('DATABASE_URL'),
+      imports: [ConfigurationModule],
+      inject: [ConfigurationService],
+      useFactory: (configService: ConfigurationService) => ({
+        uri: configService.database().url,
       }),
     }),
     UsersModule,

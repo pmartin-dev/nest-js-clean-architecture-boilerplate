@@ -1,10 +1,11 @@
 import type { INestApplication } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { getModelToken, MongooseModule } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
 import type { Model } from 'mongoose';
 
+import { ConfigurationModule } from '../../core/configuration/configuration.module';
+import { ConfigurationService } from '../../core/configuration/configuration.service';
 import { AuthGuard } from '../../core/guards/auth.guard';
 import { MongoTodo } from '../../todos/adapters/mongo/mongo-todo';
 import { TodosModule } from '../../todos/todos.module';
@@ -21,14 +22,10 @@ export class TestApp {
     const module = await Test.createTestingModule({
       imports: [
         MongooseModule.forRootAsync({
-          imports: [
-            ConfigModule.forRoot({
-              isGlobal: true,
-            }),
-          ],
-          inject: [ConfigService],
-          useFactory: (configService: ConfigService) => ({
-            uri: configService.get<string>('DATABASE_INT_TEST_URL'),
+          imports: [ConfigurationModule],
+          inject: [ConfigurationService],
+          useFactory: (configService: ConfigurationService) => ({
+            uri: configService.database().url,
           }),
         }),
         UsersModule,
