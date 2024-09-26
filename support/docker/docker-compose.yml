@@ -3,9 +3,9 @@ services:
   mongo:
     image: 'mongo:6'
     environment:
-      MONGO_INITDB_DATABASE: todoapp-test
+      MONGO_INITDB_DATABASE: todoapp
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
       TZ: Europe/Paris
     ports:
-      - '3701:27017'
+      - '3702:27017'
