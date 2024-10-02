@@ -4,14 +4,18 @@ import { ITodoRepository } from '../ports/todo-repository.interface';
 import { TodoView } from '../views/todo.view';
 
 type Request = {
-  id: string;
+  todoId: string;
+  userId: string;
 };
 
 export class GetTodoByIdQuery implements IGetTodoByIdQuery {
   constructor(private readonly repository: ITodoRepository) {}
 
   async execute(data: Request): Promise<TodoView> {
-    const todo = await this.repository.findById(data.id);
+    const todo = await this.repository.findById({
+      todoId: data.todoId,
+      userId: data.userId,
+    });
 
     if (todo === null) {
       throw new TodoNotFoundException(); // TODO: do not throw 500

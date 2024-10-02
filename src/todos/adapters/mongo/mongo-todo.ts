@@ -16,6 +16,9 @@ export namespace MongoTodo {
 
     @Prop()
     title: string;
+
+    @Prop()
+    userId: string;
   }
 
   export const Schema = SchemaFactory.createForClass(SchemaClass);

@@ -6,7 +6,7 @@ import { ConfigurationModule } from './core/configuration/configuration.module';
 import { ConfigurationService } from './core/configuration/configuration.service';
 import { AuthGuard } from './core/guards/auth.guard';
 import { LoggerModule } from './core/logger/logger.module';
-import { TodosModule } from './todos/todos.module';
+import { TodosModule } from './todos/todo.module';
 import { I_USER_REPOSITORY } from './users/ports/user-repository.interface';
 import { Authenticator } from './users/services/authenticator';
 import { UsersModule } from './users/users.module';

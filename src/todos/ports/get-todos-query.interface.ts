@@ -1,13 +1,13 @@
 import { TodoView } from '../views/todo.view';
 
-export const I_GET_TODO_BY_ID_QUERY = 'I_GET_TODO_BY_ID_QUERY';
+export const I_GET_TODOS_QUERY = 'I_GET_TODOS_QUERY';
 
-export interface IGetTodoByIdQuery {
+export interface IGetTodosQuery {
   execute({
     todoId,
     userId,
   }: {
     todoId: string;
     userId: string;
-  }): Promise<TodoView>;
+  }): Promise<TodoView[]>;
 }

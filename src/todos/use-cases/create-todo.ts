@@ -11,11 +11,13 @@ export class CreateTodo {
     private readonly idGenerator: IIDGenerator,
   ) {}
 
-  async execute(data: CreateTodoCommand): Promise<TodoView> {
+  async execute(
+    data: CreateTodoCommand & { userId: string },
+  ): Promise<TodoView> {
     const id = this.idGenerator.generate();
     const title = data.title;
 
-    const todo = new Todo({ id, title });
+    const todo = new Todo({ id, title, userId: data.userId });
 
     if (todo.hasTooLongTitle()) {
       throw new TodoTitleTooLongException();

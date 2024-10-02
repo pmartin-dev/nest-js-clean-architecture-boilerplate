@@ -16,13 +16,14 @@ describe('Feature: create todo', () => {
 
   describe('Scenario: happy path', () => {
     const title = 'title-1';
+    const userId = 'user-1';
     it('should return the ID of the created todo', async () => {
-      const result = await useCase.execute({ title });
+      const result = await useCase.execute({ title, userId });
       expect(result).toStrictEqual({ id: 'id-1', title });
     });
 
     it('should create the todo in the repository', () => {
-      useCase.execute({ title });
+      useCase.execute({ title, userId });
 
       expect(repository.database.length).toBe(1);
     });
@@ -30,8 +31,9 @@ describe('Feature: create todo', () => {
 
   describe('Scenario: the title is too long', () => {
     const title = 'title-1'.repeat(101);
+    const userId = 'user-1';
     it('should throw an error if the title is too long', async () => {
-      await expect(useCase.execute({ title })).rejects.toThrow(
+      await expect(useCase.execute({ title, userId })).rejects.toThrow(
         TodoTitleTooLongException,
       );
     });

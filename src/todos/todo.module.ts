@@ -8,14 +8,15 @@ import { MongoTodo } from './adapters/mongo/mongo-todo';
 import { MongoTodoRepository } from './adapters/mongo/mongo-todo.repository';
 import { TodoController } from './controllers/todo.controller';
 import { I_GET_TODO_BY_ID_QUERY } from './ports/get-todo-by-id-query.interface';
+import { I_GET_TODOS_QUERY } from './ports/get-todos-query.interface';
 import { I_TODO_REPOSITORY } from './ports/todo-repository.interface';
 import { GetTodoByIdQuery } from './queries/get-todo-by-id';
+import { GetTodosQuery } from './queries/get-todos';
 import { CreateTodo } from './use-cases/create-todo';
 
 @Module({
   imports: [
     UsersModule,
-    TodosModule,
     MongooseModule.forFeature([
       {
         name: MongoTodo.CollectionName,
@@ -59,7 +60,14 @@ import { CreateTodo } from './use-cases/create-todo';
         return new GetTodoByIdQuery(repository);
       },
     },
+    {
+      provide: I_GET_TODOS_QUERY,
+      inject: [I_TODO_REPOSITORY],
+      useFactory: (repository) => {
+        return new GetTodosQuery(repository);
+      },
+    },
   ],
-  exports: [],
+  exports: [I_ID_GENERATOR],
 })
 export class TodosModule {}

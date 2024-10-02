@@ -13,4 +13,8 @@ export class UserFixture implements IFixture {
     const userRepository = app.get<IUserRepository>(I_USER_REPOSITORY);
     userRepository.create(this.entity);
   }
+
+  createAuthorizationToken() {
+    return `Basic ${this.entity.props.email}:${this.entity.props.password}`;
+  }
 }

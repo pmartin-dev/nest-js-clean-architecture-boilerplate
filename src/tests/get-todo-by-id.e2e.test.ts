@@ -7,11 +7,6 @@ import { TestApp } from './utils/test-app';
 describe('Feature: get a todo', () => {
   let app: TestApp;
 
-  // const todo1 = new Todo({
-  //   id: 'id-1',
-  //   title: 'title-1',
-  // });
-
   beforeEach(async () => {
     app = new TestApp();
     await app.setup();
@@ -26,12 +21,18 @@ describe('Feature: get a todo', () => {
     const todo1 = e2eTodoSeeds.todo1;
 
     it('should get a todo', async () => {
-      const response = await request(app.getHttpServer()).get(
-        `/todos/${todo1.entity.props.id}`,
-      );
+      const response = await request(app.getHttpServer())
+        .get(`/todos/${todo1.entity.props.id}`)
+        .set(
+          'Authorization',
+          `${e2eUserSeeds.alex.createAuthorizationToken()}`,
+        );
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(todo1.entity.props);
+      expect(response.body).toEqual({
+        id: todo1.entity.props.id,
+        title: todo1.entity.props.title,
+      });
     });
   });
 });

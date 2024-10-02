@@ -8,7 +8,7 @@ import { ConfigurationModule } from '../../core/configuration/configuration.modu
 import { ConfigurationService } from '../../core/configuration/configuration.service';
 import { AuthGuard } from '../../core/guards/auth.guard';
 import { MongoTodo } from '../../todos/adapters/mongo/mongo-todo';
-import { TodosModule } from '../../todos/todos.module';
+import { TodosModule } from '../../todos/todo.module';
 import { MongoUser } from '../../users/adapters/mongo/mongo-user';
 import { I_USER_REPOSITORY } from '../../users/ports/user-repository.interface';
 import { Authenticator } from '../../users/services/authenticator';

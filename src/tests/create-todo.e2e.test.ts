@@ -20,6 +20,7 @@ describe('Feature: create a todo', () => {
     it('should create a todo', async () => {
       const response = await request(app.getHttpServer())
         .post('/todos')
+        .set('Authorization', e2eUserSeeds.alex.createAuthorizationToken())
         .send({ title: 'title-1' });
 
       expect(response.status).toBe(201);
@@ -27,6 +28,14 @@ describe('Feature: create a todo', () => {
         id: response.body.id,
         title: response.body.title,
       });
+    });
+
+    it('should return 403 if the user is not authenticated', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/todos')
+        .send({ title: 'title-1' });
+
+      expect(response.status).toBe(403);
     });
   });
 });

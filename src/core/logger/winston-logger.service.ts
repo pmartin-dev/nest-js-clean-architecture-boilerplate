@@ -1,8 +1,7 @@
 import type { LoggerService } from '@nestjs/common';
 import { createLogger, format, Logger, transports } from 'winston';
 
-import { isProductionEnvironnement } from '@/shared/environment';
-
+import { isProductionEnvironnement } from '../../shared/environment';
 import type { ConfigurationService } from '../configuration/configuration.service';
 
 export class WinstonLoggerService implements LoggerService {
