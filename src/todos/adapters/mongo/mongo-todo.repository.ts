@@ -22,11 +22,7 @@ export class MongoTodoRepository implements ITodoRepository {
   }
 
   async findById({ todoId, userId }): Promise<Todo | null> {
-    console.log({ todoId, userId });
     const record = await this.model.findOne({ _id: todoId, userId });
-
-    const records = await this.model.find({ _id: todoId });
-    console.log(records);
 
     if (!record) {
       return null;

@@ -25,7 +25,7 @@ export class TestApp {
           imports: [ConfigurationModule],
           inject: [ConfigurationService],
           useFactory: (configService: ConfigurationService) => ({
-            uri: configService.database().url,
+            uri: configService.database().testUrl,
           }),
         }),
         UsersModule,
