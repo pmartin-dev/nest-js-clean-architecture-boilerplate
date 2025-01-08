@@ -1,7 +1,7 @@
 # NestJS Boilerplate with Clean Architecture and TDD
 
 ## Motivation
-The aim of this project is too provide a NestJS boilerplate project with clean architecture and TDD.
+The aim of this project is to provide a NestJS boilerplate project with clean architecture and TDD.
 Different projects already exist but I wanted to propose a different vision which is largely inspired by Anthony Cyril (Ancyracademy).
 
 ### Clean Architecture
