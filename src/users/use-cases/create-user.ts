@@ -1,5 +1,5 @@
 import type { IIDGenerator } from '../../core/ports/id-generator.interface';
-import type { CreateUserCommand } from '../controllers/user.controller';
+import type { CreateUserCommand } from '../commands/create-user.command';
 import { User } from '../entities/user.entity';
 import type { IUserRepository } from '../ports/user-repository.interface';
 import type { UserView } from '../views/user.view';

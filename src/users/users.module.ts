@@ -8,6 +8,7 @@ import { MongoUserRepository } from './adapters/mongo/mongo-user.repository';
 import { UserController } from './controllers/user.controller';
 import { I_USER_REPOSITORY } from './ports/user-repository.interface';
 import { CreateUser } from './use-cases/create-user';
+import { SignIn } from './use-cases/signin';
 
 @Module({
   imports: [
@@ -36,6 +37,13 @@ import { CreateUser } from './use-cases/create-user';
       inject: [I_USER_REPOSITORY, I_ID_GENERATOR],
       useFactory: (repository, idGenerator) => {
         return new CreateUser(repository, idGenerator);
+      },
+    },
+    {
+      provide: SignIn,
+      inject: [I_USER_REPOSITORY],
+      useFactory: (repository) => {
+        return new SignIn(repository);
       },
     },
   ],

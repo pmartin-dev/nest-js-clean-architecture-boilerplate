@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { ConfigurationModule } from './core/configuration/configuration.module';
 import { ConfigurationService } from './core/configuration/configuration.service';
-import { AuthGuard } from './core/guards/auth.guard';
+import { AuthGuardProvider } from './core/guards/auth.guard-factory';
 import { LoggerModule } from './core/logger/logger.module';
 import { TodosModule } from './todos/todo.module';
 import { I_USER_REPOSITORY } from './users/ports/user-repository.interface';
@@ -34,18 +33,7 @@ import { UsersModule } from './users/users.module';
         return new Authenticator(repository);
       },
     },
-    {
-      provide: APP_GUARD,
-      inject: [Authenticator],
-      useFactory: (authenticator) => {
-        return new AuthGuard(authenticator, [
-          {
-            path: '/users',
-            method: 'POST',
-          },
-        ]);
-      },
-    },
+    AuthGuardProvider,
   ],
 })
 export class AppModule {}

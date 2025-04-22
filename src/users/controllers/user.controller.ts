@@ -1,20 +1,29 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { z } from 'zod';
 
 import { ZodValidationPipe } from '../../core/pipes/zod-validation.pipe';
+import {
+  type CreateUserCommand,
+  createUserSchema,
+} from '../commands/create-user.command';
+import { type SigninCommand, signinSchema } from '../commands/signin.command';
 import { CreateUser } from '../use-cases/create-user';
-
-const createUserSchema = z.object({
-  email: z.string(),
-  password: z.string(),
-});
-export type CreateUserCommand = z.infer<typeof createUserSchema>;
+import { SignIn } from '../use-cases/signin';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly createUser: CreateUser) {}
+  constructor(
+    private readonly createUser: CreateUser,
+    private readonly signIn: SignIn,
+  ) {}
 
-  @Post('')
+  @Post('signin')
+  async handleSignIn(
+    @Body(new ZodValidationPipe(signinSchema)) body: SigninCommand,
+  ) {
+    return this.signIn.execute(body);
+  }
+
+  @Post()
   async handleCreateUser(
     @Body(new ZodValidationPipe(createUserSchema)) body: CreateUserCommand,
   ) {
