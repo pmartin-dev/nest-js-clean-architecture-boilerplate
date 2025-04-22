@@ -38,7 +38,12 @@ import { UsersModule } from './users/users.module';
       provide: APP_GUARD,
       inject: [Authenticator],
       useFactory: (authenticator) => {
-        return new AuthGuard(authenticator);
+        return new AuthGuard(authenticator, [
+          {
+            path: '/users',
+            method: 'POST',
+          },
+        ]);
       },
     },
   ],
